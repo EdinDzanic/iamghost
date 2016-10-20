@@ -9,6 +9,11 @@
     <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
+                <a asp-area="" asp-controller="Manage" class="profile-image" asp-action="Index" title="Gravatar">
+                    <gravatar Id="Gravatar" Class="img-circle" Email="@UserManager.GetUserName(User)" Size="40"></gravatar>
+                </a>
+            </li>
+            <li>
                 <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
             </li>
             <li>
