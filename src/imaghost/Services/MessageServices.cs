@@ -1,19 +1,47 @@
-﻿using System;
+﻿using MailKit.Net.Smtp;
+using MimeKit;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace imaghost.Services
 {
-    // This class is used by the application to send Email and SMS
-    // when you turn on two-factor authentication in ASP.NET Identity.
-    // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
-        public Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            MimeMessage msg = new MimeMessage();
+            msg.From.Add(new MailboxAddress("I'am a ghost", "no-reply@imaghost.com"));
+            msg.To.Add(new MailboxAddress("", email));
+            msg.Subject = subject;
+            msg.Body = new TextPart()
+            {
+                Text = message
+            };
+
+            using (SmtpClient smtpClient = new SmtpClient())
+            {
+                NetworkCredential credentials = new NetworkCredential("nitrodino666@gmail.com", "e26dzsefo");
+
+                try
+                {
+                    smtpClient.Connect("smtp.gmail.com", Convert.ToInt32(465), true);
+                    smtpClient.Authenticate(credentials);
+
+                    await smtpClient.SendAsync(msg);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+                finally
+                {
+                    smtpClient.Disconnect(true);
+                }
+            }
         }
 
         public Task SendSmsAsync(string number, string message)
