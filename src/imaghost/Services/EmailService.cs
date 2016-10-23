@@ -3,6 +3,7 @@ using MailKit.Security;
 using MimeKit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -24,14 +25,23 @@ namespace imaghost.Services
 
             using (SmtpClient smtpClient = new SmtpClient())
             {
-                NetworkCredential credentials = new NetworkCredential( "nitrodino666@gmail.com", "e26dzsefo");
+                NetworkCredential credentials = new NetworkCredential("nitrodino666@gmail.com", "e26dzsefo");
 
-                smtpClient.Authenticate(credentials);
-                smtpClient.Connect("smtp.gmail.com", Convert.ToInt32(587), true);
+                try
+                {
+                    smtpClient.Connect("smtp.gmail.com", Convert.ToInt32(465), true);
+                    smtpClient.Authenticate(credentials);
 
-                await smtpClient.SendAsync(msg);
-
-                smtpClient.Disconnect(true);
+                    await smtpClient.SendAsync(msg);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+                finally
+                {
+                    smtpClient.Disconnect(true);
+                }
             }
         }
     }
