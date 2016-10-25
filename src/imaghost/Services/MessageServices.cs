@@ -17,10 +17,10 @@ namespace imaghost.Services
             msg.From.Add(new MailboxAddress("I'am a ghost", "no-reply@imaghost.com"));
             msg.To.Add(new MailboxAddress("", email));
             msg.Subject = subject;
-            msg.Body = new TextPart()
-            {
-                Text = message
-            };
+
+            var builder = new BodyBuilder();
+            builder.HtmlBody = message;
+            msg.Body = builder.ToMessageBody();
 
             using (SmtpClient smtpClient = new SmtpClient())
             {
