@@ -1,4 +1,6 @@
-﻿using MailKit.Net.Smtp;
+﻿using imaghost.Helpers;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,13 @@ namespace imaghost.Services
 {
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
+        private readonly EmailSettings emailSettings;
+
+        public AuthMessageSender(IOptions<EmailSettings> emailSettings)
+        {
+            this.emailSettings = emailSettings.Value;
+        }
+
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             MimeMessage msg = new MimeMessage();
@@ -24,7 +33,7 @@ namespace imaghost.Services
 
             using (SmtpClient smtpClient = new SmtpClient())
             {
-                NetworkCredential credentials = new NetworkCredential("nitrodino666@gmail.com", "e26dzsefo");
+                NetworkCredential credentials = new NetworkCredential(emailSettings.Email, emailSettings.Password);
 
                 try
                 {
