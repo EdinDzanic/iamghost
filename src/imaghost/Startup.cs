@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using imaghost.Data;
 using imaghost.Models;
 using imaghost.Services;
+using imaghost.Helpers;
 
 namespace imaghost
 {
@@ -46,6 +47,8 @@ namespace imaghost
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             services.AddMvc();
 
